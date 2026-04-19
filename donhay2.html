@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Độ Nhạy VIP MAX</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial;
+    background: #020617;
+    color: white;
+    text-align: center;
+}
+
+h1 {
+    color: #00ffe5;
+    margin-top: 20px;
+    text-shadow: 0 0 10px #00ffe5;
+}
+
+.select-box {
+    width: 80%;
+    margin: 10px auto;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    font-size: 16px;
+}
+
+button {
+    width: 80%;
+    padding: 14px;
+    margin: 10px auto;
+    border: none;
+    border-radius: 12px;
+    background: #00ffe5;
+    color: black;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 0 15px #00ffe5;
+}
+
+.card {
+    width: 80%;
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 15px;
+    background: rgba(0,255,229,0.08);
+    box-shadow: 0 0 20px #00ffe5;
+    display: none;
+}
+
+.fire {
+    color: red;
+    font-weight: bold;
+}
+/* nền động */
+body {
+    margin: 0;
+    font-family: Arial;
+    color: white;
+    text-align: center;
+    background: linear-gradient(270deg, #020617, #001f2f, #020617);
+    background-size: 600% 600%;
+    animation: bgMove 10s ease infinite;
+}
+
+/* animation nền */
+@keyframes bgMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* hiệu ứng fade khi load */
+body {
+    animation: fadeIn 1.5s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes glowText {
+    0% { text-shadow: 0 0 5px #d8e7e6; }
+    50% { text-shadow: 0 0 20px #1eb9ce; }
+    100% { text-shadow: 0 0 5px #eff1f1; }
+}
+
+.copyright {
+    animation: glowText 2s infinite;
+}
+/* glow chung */
+h1, button, .card {
+    text-shadow: 0 0 10px #00ffe5;
+}
+
+/* button hover xịn hơn */
+button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 25px #00ffe5;
+}
+
+/* card hiện lên mượt */
+.card {
+    transition: all 0.4s ease;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 80px; /* 👈 lùi xuống */
+}
+
+.copyright {
+    text-align: center;
+    margin-top: 20px;
+    color: #00ffe5;
+    text-shadow: 0 0 5px #00ffe5, 0 0 10px #00ffe5;
+    font-size: 14px;
+}
+
+/* link */
+.copyright a {
+    color: #1395e0;
+    text-decoration: none;
+    font-weight: bold;
+    text-shadow: 0 0 8px #000000;
+    transition: 0.3s;
+}
+
+/* hover sáng mạnh */
+.copyright a:hover {
+    text-shadow: 0 0 15px #00ffe5, 0 0 30px #00ffe5;
+    color: white;
+}
+</style>
+</head>
+
+<body>
+    <style>
+#volume {
+    -webkit-appearance: none;
+    width: 120px;
+    height: 6px;
+    border-radius: 5px;
+    outline: none;
+    position: fixed;
+    top: 70px;
+    right: 15px;
+
+    background: linear-gradient(to right, #00ffe5 50%, #333 50%);
+}
+
+/* nút kéo */
+#volume::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #00ffe5;
+    box-shadow: 0 0 10px #00ffe5, 0 0 20px #00ffe5;
+    cursor: pointer;
+}
+
+/* hover xịn */
+#volume::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+    box-shadow: 0 0 20px #00ffe5, 0 0 40px #00ffe5;
+}
+
+/* Firefox */
+#volume::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #00ffe5;
+    box-shadow: 0 0 10px #00ffe5;
+    cursor: pointer;
+}
+
+#toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    background: rgba(0, 0, 0, 0.8);
+    color: #00ffe5;
+    padding: 12px 20px;
+
+    border-radius: 10px;
+    font-weight: bold;
+
+    opacity: 0;
+    pointer-events: none;
+
+    transition: 0.4s;
+}
+
+#toast.show {
+    opacity: 1;
+    bottom: 50px;
+}
+</style>
+
+<h1>ĐỘ NHẠY VIP MAX</h1>
+
+<div id="toast">✅ Chọn thành công</div>
+
+<!-- Chọn hệ -->
+<select id="system" class="select-box" onchange="updateDevice()">
+    <option value="">-- Chọn Loại Máy --</option>
+    <option value="iphone">iPhone</option>
+    <option value="android">Android</option>
+</select>
+
+<select id="device" class="select-box" style="display:none;"></select>
+
+<!-- Chọn dòng máy -->
+<select id="device" class="select-box" style="display:none;"></select>
+
+<button onclick="randomSensitivity()">MỞ NHẬN ĐỀ HIỆN ĐỘ NHẠY</button>
+<button onclick="toggleMenu()">Nguyễn Phương</button>
+
+<div id="resultCard" class="card"></div>
+<div id="menu" style="display:none; margin-top:10px;">
+    <a href="https://www.facebook.com/share/172JQ3xq7N/?mibextid=wwXIfr" target="_blank">Facebook</a><br><br>
+    <a href="https://zalo.me/0981931307" target="_blank">Zalo</a><br><br>
+    <a href="https://zalo.me/g/yoakir642" target="_blank">Box Zalo</a><br><br>
+    <a href="https://www.tiktok.com/@ngphwtrumfileff?is_from_webapp=1&sender_device=pc" target="_blank">TikTok</a>
+</div>
+
+<script>
+function updateDevice(){
+ let system=document.getElementById("system").value;
+ let d=document.getElementById("device");
+
+ d.style.display="block";
+
+ if(system==="iphone"){
+  d.innerHTML=`
+  <option value="">-- Chọn iPhone --</option>
+   <option value="ip6">iPhone 6</option>
+   <option value="ip7">iPhone 7</option>
+   <option value="ip8">iPhone 8</option>
+   <option value="ipX">iPhone X</option>
+   <option value="ip11">iPhone 11</option>
+   <option value="ip12">iPhone 12</option>
+   <option value="ip13">iPhone 13</option>
+   <option value="ip14">iPhone 14</option>
+   <option value="ip15">iPhone 15</option>
+   <option value="ip16">iPhone 16</option>
+   <option value="ip17">iPhone 17</option>`;
+ }
+
+ if(system==="android"){
+  d.innerHTML=`
+  <option value="">-- Chọn Android --</option>
+   <option value="samsung">Samsung</option>
+   <option value="xiaomi">Xiaomi</option>
+   <option value="oppo">Oppo</option>
+   <option value="redmi">Redmi</option>
+  `;
+ }
+
+ showToast("📱 Đã chọn hệ máy");
+}
+// hiển thị kết quả
+function randomSensitivity(){
+
+ const data={
+
+  // ===== IPHONE =====
+  ip6:{g:[180,198],r:[160,180],x2:[150,170],x4:[145,165],awm:[140,160],free:[175,195],fire:[30,55]},
+  ip7:{g:[175,195],r:[165,180],x2:[155,170],x4:[150,165],awm:[145,160],free:[175,195],fire:[30,55]},
+  ip8:{g:[170,193],r:[170,185],x2:[160,175],x4:[155,170],awm:[150,165],free:[175,195],fire:[30,55]},
+  ipX:{g:[170,190],r:[175,190],x2:[145,170],x4:[160,175],awm:[155,170],free:[175,195],fire:[30,55]},
+  ip11:{g:[165,195],r:[180,195],x2:[130,165],x4:[135,150],awm:[135,150],free:[175,195],fire:[30,55]},
+  ip12:{g:[165,195],r:[130,160],x2:[125,160],x4:[120,145],awm:[130,145],free:[175,195],fire:[35,55]},
+  ip13:{g:[160,190],r:[100,130],x2:[120,155],x4:[110,125],awm:[125,140],free:[175,195],fire:[30,50]},
+  ip14:{g:[155,185],r:[100,130],x2:[115,150],x4:[100,120],awm:[110,140],free:[175,195],fire:[30,50]},
+  ip15:{g:[150,180],r:[100,130],x2:[109,130],x4:[100,120],awm:[110,140],free:[175,195],fire:[30,50]},
+  ip16:{g:[145,180],r:[100,130],x2:[105,120],x4:[100,120],awm:[110,140],free:[175,195],fire:[30,50]},
+  ip17:{g:[140,180],r:[100,130],x2:[100,120],x4:[100,120],awm:[110,140],free:[175,195],fire:[30,50]},
+
+  // ===== ANDROID =====
+  samsung:{g:[175,190],r:[165,185],x2:[155,180],x4:[150,170],awm:[90,110],free:[130,180],fire:[30,55]},
+  xiaomi:{g:[175,190],r:[165,185],x2:[155,180],x4:[150,170],awm:[110,140],free:[130,180],fire:[30,55]},
+  oppo:{g:[175,190],r:[165,185],x2:[155,180],x4:[150,170],awm:[120,150],free:[130,180],fire:[30,55]},
+  redmi:{g:[175,190],r:[165,185],x2:[155,180],x4:[150,170],awm:[110,140],free:[130,180],fire:[30,55]}
+ };
+
+ let device=document.getElementById("device").value;
+
+ if(!device){
+  showToast("⚠️ Chưa chọn máy!");
+  return;
+ }
+
+ function rand(a,b){return Math.floor(Math.random()*(b-a+1))+a;}
+
+ let d=data[device];
+
+ document.getElementById("resultCard").innerHTML=`
+ <h2>${device.toUpperCase()}</h2>
+ <p>Tổng quan: ${rand(d.g[0],d.g[1])}</p>
+ <p>Red Dot: ${rand(d.r[0],d.r[1])}</p>
+ <p>2x Scope: ${rand(d.x2[0],d.x2[1])}</p>
+ <p>4x Scope: ${rand(d.x4[0],d.x4[1])}</p>
+ <p>AWM: ${rand(d.awm[0],d.awm[1])}</p>
+ <p>Free Look: ${rand(d.free[0],d.free[1])}</p>
+ <p class="fire">🔥 Nút bắn: ${rand(d.fire[0],d.fire[1])}%</p>
+ `;
+
+ document.getElementById("resultCard").style.display="block";
+ showToast("CẬP NHẬT THÀNH CÔNG ĐỘ NHẠY VIP!");
+}
+</script>
+<canvas id="bg"></canvas>
+
+<style>
+#menu a {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 5px;
+    border-radius: 10px;
+    background: rgba(0,255,229,0.1);
+    color: #00ffe5;
+    text-decoration: none;
+    box-shadow: 0 0 10px #00ffe5;
+}
+</style>
+<style>
+#bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -1;
+}
+</style>
+
+<script>
+const canvas = document.getElementById("bg");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let particles = [];
+
+for (let i = 0; i < 80; i++) {
+    particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        vx: Math.random() * 1 - 0.5,
+        vy: Math.random() * 1 - 0.5
+    });
+}
+
+function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // vẽ hạt
+    for (let i = 0; i < particles.length; i++) {
+        let p = particles[i];
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
+        ctx.fillStyle = "#00ffe5";
+        ctx.fill();
+
+        // vẽ đường nối
+        for (let j = i; j < particles.length; j++) {
+            let p2 = particles[j];
+            let dx = p.x - p2.x;
+            let dy = p.y - p2.y;
+            let dist = Math.sqrt(dx * dx + dy * dy);
+
+            if (dist < 120) {
+                ctx.beginPath();
+                ctx.moveTo(p.x, p.y);
+                ctx.lineTo(p2.x, p2.y);
+                ctx.strokeStyle = "rgba(0,255,229,0.2)";
+                ctx.stroke();
+            }
+        }
+
+        // di chuyển
+        p.x += p.vx;
+        p.y += p.vy;
+
+        if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+        if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+    }
+
+    requestAnimationFrame(draw);
+}
+
+draw();
+
+// resize
+window.addEventListener("resize", () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+});
+</script>
+
+<!-- ====== ICON NHẠC ====== -->
+<div id="musicControl" onclick="toggleMusic()">🔊</div>
+
+<!-- ====== THANH ÂM LƯỢNG ====== -->
+<input type="range" id="volume" min="0" max="1" step="0.1" value="0.5">
+
+<!-- ====== AUDIO ====== -->
+<audio id="music">
+    <source src="https://thanhson.shop/uploads/ted.mp3"loop>
+</audio>
+
+<audio id="clickSound">
+    <source src="https://www.soundjay.com/buttons/sounds/button-16.mp3">
+</audio>
+
+<style>
+
+/* icon nhạc */
+#musicControl {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    font-size: 18px;
+    background: rgba(0,255,229,0.1);
+    padding: 8px;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 0 15px #00ffe5;
+}
+
+/* thanh âm lượng */
+#volume {
+    -webkit-appearance: none;
+    width: 120px;
+    height: 6px;
+    border-radius: 5px;
+    outline: none;
+
+    background: linear-gradient(to right, #00ffe5 50%, #333 50%);
+}
+
+/* nút kéo */
+#volume::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #00ffe5;
+    box-shadow: 0 0 10px #00ffe5, 0 0 20px #00ffe5;
+    cursor: pointer;
+
+}
+#keyBox button {
+    padding: 12px 20px;
+    border-radius: 12px;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 0 15px #00ffe5;
+    transition: 0.3s;
+}
+
+#keyBox button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 25px #00ffe5;
+}
+
+#toast.show {
+    opacity: 1;
+    bottom: 50px;
+}
+</style>
+
+<script>
+function showToast(msg) {
+    let toast = document.getElementById("toast");
+    toast.innerText = msg;
+    toast.classList.add("show");
+
+    setTimeout(() => {
+        toast.classList.remove("show");
+    }, 2000);
+}
+</script>
+<script>
+let music = document.getElementById("music");
+let volume = document.getElementById("volume");
+let control = document.getElementById("musicControl");
+
+// set volume ban đầu
+music.volume = volume.value;
+
+// ===== FIX PHÁT NHẠC =====
+document.addEventListener("click", function () {
+    // phát nhạc nếu đang pause
+    if (music.paused) {
+        music.play().catch(()=>{});
+    }
+
+    // nếu có AudioContext (visualizer) thì resume
+    if (typeof audioCtx !== "undefined" && audioCtx.state === "suspended") {
+        audioCtx.resume();
+    }
+}, { once: true }); // chỉ chạy 1 lần
+
+// ===== NÚT LOA =====
+function toggleMusic() {
+    if (music.paused) {
+        music.play();
+        control.innerText = "🔊";
+    } else {
+        music.pause();
+        control.innerText = "🔇";
+    }
+}
+
+// ===== VOLUME + MÀU =====
+function updateVolumeUI(val) {
+    let percent = val * 100;
+
+    volume.style.background =
+        `linear-gradient(to right, #00ffe5 ${percent}%, #333 ${percent}%)`;
+}
+
+// chạy lúc đầu
+updateVolumeUI(volume.value);
+
+// kéo volume
+volume.addEventListener("input", function () {
+    let v = parseFloat(this.value);
+    music.volume = v;
+    updateVolumeUI(v);
+});
+</script>
+<script>
+function toggleMenu() {
+    let menu = document.getElementById("menu");
+    menu.style.display = (menu.style.display === "none") ? "block" : "none";
+}
+</script>
+<script>
+function showToast(msg) {
+    let toast = document.getElementById("toast");
+    toast.innerText = msg;
+
+    toast.classList.add("show");
+
+    setTimeout(() => {
+        toast.classList.remove("show");
+    }, 2000);
+}
+</script>
+</body>
+</html>
+<div class="copyright">
+    © 2026 Bản Quyền Thuộc Về 
+    <a href="https://ngphw.shop" target="_blank">Nguyễn Phương</a>
+</div>
